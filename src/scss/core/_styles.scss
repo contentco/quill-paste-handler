@@ -1,0 +1,16 @@
+@import 'core/variables'; /* sass-loader doesnt like absolute imports*/
+.ql-editor table {
+    width: 100%;
+    border-collapse: collapse
+}
+.ql-editor table td {
+    border: 1px solid $black;
+    padding: 5px;
+    height: 25px
+}
+.ql-contain,
+.ql-table {
+    width: auto!important;
+    margin-right: -15px
+}
+
