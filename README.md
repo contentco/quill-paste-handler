@@ -4,6 +4,8 @@ Custom module for [Quill.js](https://github.com/quilljs/quill) to allow user to 
 
 ## Depedency
 [quilljs-table](https://github.com/dost/quilljs-table)
+## Installation
+bower install quill-paste-handler
 
 ## Usage
 ### Webpack/ES6
