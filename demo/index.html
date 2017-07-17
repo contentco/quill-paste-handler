@@ -13,13 +13,54 @@
         </div>
         <script src="../node_modules/quill/dist/quill.js"></script>
         <script src="../dist/quill-paste-handler.js"></script>
+        <script src="../src/data.js"></script>
         <script type="text/javascript">
             var quill = new Quill('#quill-editor', {
-                                  modules:{
-                                    pasteHandler: true
-                                  },
-                                  theme: 'snow'
-                      });
+                modules: {
+                  toolbar: {
+                    container: [
+                      ['bold', 'italic', 'underline', 'strike']
+                    ],
+                    handlers: {},
+                  },
+                  clipboard: {
+                    matchers: [
+                      ['TD, TH', function (node, delta) {
+                        delta.insert("\n", { td: true })
+                        delta.insert({ tdbr: true });
+                        return delta;
+                      }],
+                      ['TR', function (node, delta) {
+                        delta.insert({ trbr: true });
+                        return delta;
+                      }],        
+                    ]
+                  },    
+                  keyboard: {
+                    bindings: {
+                      'backspaceTable': {
+                          key: 8,
+                          format: ['td'],
+                          // offset: 0,
+                          handler: function handleTableBackspace (range, context) {
+                            var formats = quill.getFormat(range.index-1, 1)
+                            if (formats.tdbr || formats.trbr) {
+                              // prevent deletion of table break
+                              return false 
+                            }
+                            return true
+                          }  
+                      }      
+                    }
+                  },
+                  pasteHandler: true
+                },
+                placeholder: 'Compose an epic...',
+                theme: 'snow'  // or 'bubble'
+              });
+            var delta = getSampleDelta();
+            document.getElementById("quill-editor").value=JSON.stringify(delta, null, 2)
+            quill.setContents(delta);
             
         </script>
     </body>

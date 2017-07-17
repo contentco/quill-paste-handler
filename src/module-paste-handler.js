@@ -4,7 +4,7 @@
  * extend from author https://github.com/schneidmaster
  */
 let Delta = Quill.import('delta');
-import {TableTrick} from '../src/quill.table.js';
+import {TableTrick} from '../src/table-break.js';
 export class PasteHandler {
 	constructor(quill, options) {
 		// save the quill reference
@@ -36,21 +36,6 @@ export class PasteHandler {
 			  	}
 				return delta;
 			});	
-			let table_id = TableTrick.random_id();
-	        let row_id = TableTrick.random_id();
-	        this.quill.clipboard.addMatcher('TABLE', function(node, delta) {
-				table_id = TableTrick.random_id();
-				delta.insert('\n');
-				return delta;
-	        });
-	        this.quill.clipboard.addMatcher('TR', function(node, delta) {
-	          row_id = TableTrick.random_id();
-	          return delta;
-	        });
-	        this.quill.clipboard.addMatcher('TD', function(node, delta) {
-	          let cell_id = TableTrick.random_id();
-	          return delta.compose(new Delta().retain(delta.length(), { td: table_id+'|'+row_id+'|'+cell_id }));
-	        });
 
 	        this.quill.clipboard.addMatcher('LI', function(node, delta) {
 				let style = window.getComputedStyle(node);
@@ -89,21 +74,16 @@ export class PasteHandler {
 		let current_container = this.quill.container;
 		let editor = current_container.children[0];
 		let current_html = editor.innerHTML;
-		let table_id = TableTrick.random_id();
-	    let row_id = TableTrick.random_id();	    
-	    this.quill.clipboard.addMatcher('TABLE', function(node, delta) {
-	     	table_id = TableTrick.random_id();
-	    	return delta;
-	    });
-	    this.quill.clipboard.addMatcher('TR', function(node, delta) {
-	      row_id = TableTrick.random_id();
-	      return delta;
-	    });
-	    this.quill.clipboard.addMatcher('TD', function(node, delta) {
-	      let cell_id = TableTrick.random_id();
-	      return delta.compose(new Delta().retain(delta.length(), { td: table_id+'|'+row_id+'|'+cell_id }));
-	    });
-		this.quill.clipboard.dangerouslyPasteHTML(current_html);	
+		// this.quill.clipboard.addMatcher('TD', function(node, delta) {
+  //         	delta.insert("\n", { td: true })
+  //           delta.insert({ tdbr: true });
+  //           return delta;
+  //       });
+
+  //       this.quill.clipboard.addMatcher('TR', function(node, delta) {
+  //         	delta.insert({ trbr: true });
+  //           return delta;
+  //       });	
 	}
 }
 Quill.register('modules/pasteHandler', PasteHandler);

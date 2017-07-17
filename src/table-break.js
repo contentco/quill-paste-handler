@@ -1,10 +1,8 @@
-// quill-table-breaks.js
-
 let Container = Quill.import('blots/container');
 let Scroll = Quill.import('blots/scroll');
 let Inline = Quill.import('blots/inline');
 let Block = Quill.import('blots/block');
-let Delta = Quill.import('delta');
+//let Delta = Quill.import('delta');
 let Parchment = Quill.import('parchment');
 let BlockEmbed = Quill.import('blots/block/embed');
 let TextBlot = Quill.import('blots/text');
@@ -18,9 +16,6 @@ class ContainBlot extends Container {
 
   insertBefore(blot, ref) {
     if (blot.statics.blotName == this.statics.blotName) {
-      console.log('############################ Not sure this is clean:')
-      console.log(blot)
-      console.log(blot.children.head)
       super.insertBefore(blot.children.head, ref);
     } else {
       super.insertBefore(blot, ref);
@@ -240,93 +235,3 @@ for (let r = 1; r <= maxRows; r++) {
 }
 
 Quill.debug('debug');
-var quill = new Quill('#editor-container', {
-  modules: {
-    toolbar: {
-      container: [
-        [{ 'table': tableOptions }], // new table (cursor needs to be out of table)
-        ['table-insert-rows'], // cursor needs to be in the table
-        ['table-insert-columns'], // cursor needs to be in the table
-
-        ['bold', 'italic', 'underline', 'strike'],
-        ['blockquote', 'code-block'],
-
-        [{ 'header': 1 }, { 'header': 2 }],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'script': 'sub'}, { 'script': 'super' }],
-        [{ 'indent': '-1'}, { 'indent': '+1' }],
-        [{ 'direction': 'rtl' }],
-
-        [{ 'size': ['small', false, 'large', 'huge'] }],
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'align': [] }],
-
-        ['link', 'image', 'code-block'],
-
-        ['clean']
-      ],
-      handlers: {
-    
-      }
-    },
-    clipboard: {
-      matchers: [
-        ['TD, TH', function (node, delta) {
-          delta.insert("\n", { td: true })
-          delta.insert({ tdbr: true })
-          return delta
-        }],
-        ['TR', function (node, delta) {
-          delta.insert({ trbr: true })
-          return delta
-        }],        
-      ]
-    },    
-    keyboard: {
-      bindings: {
-        'backspaceTable': {
-            key: 8,
-            format: ['td'],
-            // offset: 0,
-            handler: function handleTableBackspace (range, context) {
-              var formats = quill.getFormat(range.index-1, 1)
-              if (formats.tdbr || formats.trbr) {
-                // prevent deletion of table break
-                return false 
-              }
-              return true
-            }  
-        }      
-      }
-    },
-  },
-  placeholder: 'Compose an epic...',
-  theme: 'snow'  // or 'bubble'
-});
-
-
-
-
-
-function getClosestNewLineIndex (contents, index) {
-  return index + contents.map((op) => {
-    return typeof op.insert === 'string' ? op.insert : ' '
-  }).join('')
-    .slice(index)
-    .indexOf('\n')
-}
-
-function find_td(what) {
-    let leaf = quill.getLeaf(quill.getSelection()['index']);
-    let blot = leaf[0];
-    for(;blot!=null && blot.statics.blotName!=what;) {
-      blot=blot.parent;
-    }
-    return blot; // return TD or NULL
-}
-
-
-
-
