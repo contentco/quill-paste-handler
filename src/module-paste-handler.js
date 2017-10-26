@@ -4,7 +4,7 @@
  * extend from author https://github.com/schneidmaster
  */
 let Delta = Quill.import('delta');
-import {TableTrick} from '../src/table-break.js';
+//import {TableTrick} from '../src/table-break.js';
 export class PasteHandler {
 	constructor(quill, options) {
 		// save the quill reference
@@ -35,7 +35,7 @@ export class PasteHandler {
 				    delta.ops = ops;
 			  	}
 				return delta;
-			});	
+			});
 
 	        this.quill.clipboard.addMatcher('LI', function(node, delta) {
 				let style = window.getComputedStyle(node);
@@ -67,23 +67,13 @@ export class PasteHandler {
 					delta.ops = ops;
 				};
 				return delta;
-			});	
+			});
 		}
 	}
 	handleGetData(evt){
 		let current_container = this.quill.container;
 		let editor = current_container.children[0];
 		let current_html = editor.innerHTML;
-		// this.quill.clipboard.addMatcher('TD', function(node, delta) {
-  //         	delta.insert("\n", { td: true })
-  //           delta.insert({ tdbr: true });
-  //           return delta;
-  //       });
-
-  //       this.quill.clipboard.addMatcher('TR', function(node, delta) {
-  //         	delta.insert({ trbr: true });
-  //           return delta;
-  //       });	
 	}
 }
 Quill.register('modules/pasteHandler', PasteHandler);
