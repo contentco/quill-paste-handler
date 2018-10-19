@@ -155,9 +155,8 @@ var PasteHandler = exports.PasteHandler = function () {
 			}
 
 			// Remove background and color
-			quill.clipboard.addMatcher(Node.ELEMENT_NODE, function (node, delta) {
+			this.quill.clipboard.addMatcher(Node.ELEMENT_NODE, function (node, delta) {
 				delta.ops.forEach(function (match) {
-					console.log(match);
 					if (match.attributes && match.attributes.background) {
 						delete match.attributes.background;
 					}
