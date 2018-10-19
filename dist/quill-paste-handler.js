@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -105,6 +105,7 @@ var PasteHandler = exports.PasteHandler = function () {
 	_createClass(PasteHandler, [{
 		key: 'handlePaste',
 		value: function handlePaste(evt) {
+
 			if (evt.clipboardData && evt.clipboardData.items && evt.clipboardData.items.length) {
 				this.quill.clipboard.addMatcher(Node.TEXT_NODE, function (node, delta) {
 					var regex = /https?:\/\/[^\s]+/g;
@@ -152,6 +153,21 @@ var PasteHandler = exports.PasteHandler = function () {
 					return delta;
 				});
 			}
+
+			// Remove background and color
+			quill.clipboard.addMatcher(Node.ELEMENT_NODE, function (node, delta) {
+				delta.ops.forEach(function (match) {
+					console.log(match);
+					if (match.attributes && match.attributes.background) {
+						delete match.attributes.background;
+					}
+
+					if (match.attributes && match.attributes.color) {
+						delete match.attributes.color;
+					}
+				});
+				return delta;
+			});
 		}
 	}, {
 		key: 'handleGetData',

@@ -16,6 +16,7 @@ export class PasteHandler {
 		this.quill.once('editor-change', this.handleGetData, false);
 	}
 	handlePaste(evt) {
+
 		if (evt.clipboardData && evt.clipboardData.items && evt.clipboardData.items.length) {
 			this.quill.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
 				let regex = /https?:\/\/[^\s]+/g;
@@ -69,6 +70,22 @@ export class PasteHandler {
 				return delta;
 			});
 		}
+
+		// Remove background and color
+		quill.clipboard.addMatcher (Node.ELEMENT_NODE, function (node, delta) {
+			delta.ops.forEach(function (match) {
+				console.log(match);
+				if (match.attributes && match.attributes.background) {
+					delete match.attributes.background;
+				}
+		
+				if (match.attributes && match.attributes.color) {
+					delete match.attributes.color;
+				}
+			});
+			return delta;
+		});
+
 	}
 	handleGetData(evt){
 		let current_container = this.quill.container;
